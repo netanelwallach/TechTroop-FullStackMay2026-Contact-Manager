@@ -3,6 +3,9 @@ import fs from "fs";
 const CONTACTS_FILE = "contacts.json";
 
 export class ContactService {
+  constructor(filePath = "contacts.json") {
+    this.filePath = filePath;
+  }
   #loadContacts() {
     if (fs.existsSync(CONTACTS_FILE)) {
       const data = fs.readFileSync(CONTACTS_FILE, "utf8");
