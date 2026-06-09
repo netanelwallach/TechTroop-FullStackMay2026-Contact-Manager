@@ -1,7 +1,7 @@
 module.exports = { handleCommand };
 
 const { validateEmail } = require("../utils/validation");
-const contactService = require("../services/contactService");
+const contactService = require("../Services/contactService");
 
 function handleCommand(args) {
   const command = args[0];
