@@ -22,6 +22,7 @@ function handleCommand(args) {
       console.log(`Loading contacts from contacts.json...`);
       result = contactService.add(args[1], args[2], args[3]);
       if (result.isDuplicate) {
+        console.log(`✓ Loaded ${result.loadedCount} contacts`);
         throw new Error("Contact with this email already exists");
       }
       if (result.loadedCount === 0) {
@@ -40,7 +41,7 @@ function handleCommand(args) {
         console.log("=== No Contacts ===");
         break;
       }
-      console.log(`✓ Loaded ${result.loadedCount} contacts`);
+      console.log(`✓ Loaded ${result.loadedCount} contacts\n`);
       console.log("=== All Contacts ===");
       result.contacts.forEach((contact, index) => {
         console.log(
@@ -87,7 +88,7 @@ function handleCommand(args) {
         console.log("=== No Contacts ===");
         break;
       }
-      console.log(`✓ Loaded ${result.loadedCount} contacts\n`);
+      console.log(`✓ Loaded ${result.loadedCount} contacts`);
       if (result.contactNotFound) {
         console.log(`✗ Error: No contact found with email: "${args[1]}"`);
       } else {
@@ -115,5 +116,10 @@ Commands:
   list                        - List all contacts
   search "query"              - Search contacts by name or email
   delete "email"              - Delete contact by email
-  help                        - Show this help message`);
+  help                        - Show this help message
+
+Examples:
+  node contacts.js add "John Doe" "john@example.com" "555-123-4567"
+  node contacts.js search "john"
+  node contacts.js delete "john@example.com"`);
 }
