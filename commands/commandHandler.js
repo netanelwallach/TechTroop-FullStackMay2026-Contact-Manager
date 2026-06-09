@@ -1,6 +1,7 @@
 module.exports = { handleCommand };
 
 const { validateEmail } = require('../utils/validation');
+const { add } = require('../services/contactService');
 
 function handleCommand(args) {
     const command = args[0];
@@ -8,6 +9,7 @@ function handleCommand(args) {
     if (!command) {
         return;
     }
+    const result = {};
 
     switch (command) {
         case 'add':
@@ -16,11 +18,11 @@ function handleCommand(args) {
             }
             validateEmail(args[2]);
             console.log(`Loading contacts from contacts.json...`);
-            const result = contactService.addContact(args[1], args[2], args[3]);
+            result = contactService.add(args[1], args[2], args[3]);
             if (result.isDuplicate) {
                 throw new Error("Contact with this email already exists");
             }
-            if (result.fileNotFound) {
+            if (result.loadedCount === 0) {
                 console.log(`✗ File not found - creating new contact list`);
             } else {
                 console.log(`✓ Loaded ${result.loadedCount} contacts`);
@@ -31,8 +33,8 @@ function handleCommand(args) {
 
         case 'list':
             console.log("Loading contacts from contacts.json...");
-            const result = contactService.listContacts();
-            if (result.loadedCount == 0) {
+            result = contactService.list();
+            if (result.loadedCount === 0) {
                 console.log("=== No Contacts ===");
                 break;
             }
@@ -48,8 +50,8 @@ function handleCommand(args) {
                 throw new Error("Missing query for search command\nUsage: node contacts.js search \"query\"");
             }
             console.log("Loading contacts from contacts.json...");
-            const result = contactService.searchContacts(args[1]);
-            if (result.loadedCount == 0) {
+            result = contactService.search(args[1]);
+            if (result.loadedCount === 0) {
                 console.log("=== No Contacts ===");
                 break;
             }
@@ -70,8 +72,8 @@ function handleCommand(args) {
                 throw new Error("Missing email for delete command\nUsage: node contacts.js delete \"email\"");
             }
             console.log("Loading contacts from contacts.json...");
-            const result = deleteContact(args[1]);
-            if (result.loadedCount == 0) {
+            result = remove(args[1]);
+            if (result.loadedCount === 0) {
                 console.log("=== No Contacts ===");
                 break;
             }
@@ -79,7 +81,7 @@ function handleCommand(args) {
             if (result.contactNotFound) {
                 console.log(`✗ Error: No contact found with email: "${args[1]}"`);
             } else {
-                console.log(`Contact deleted: "${args[1]}"`);
+                console.log(`Contact deleted: "${result.deletedName}"`);
                 console.log(`✓ Contacts saved to contacts.json`);
             }
             break;

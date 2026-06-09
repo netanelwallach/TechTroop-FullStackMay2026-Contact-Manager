@@ -10,14 +10,15 @@ function loadContacts() {
   return []; // Return empty array if file doesn't exist yet
 }
 
-function add(name, phone, email) {
+export function add(name, phone, email) {
   let result = {};
   const contacts = loadContacts();
 
-  result.size = contacts.length;
+  result.loadedCount = contacts.length;
 
   if (contacts.some((c) => c.email.toLowerCase() === email.toLowerCase())) {
-    result.error = "Email already exists in contacts";
+    //result.error = "Email already exists in contacts";
+    result.isDuplicate = true;
     return result;
   }
 
@@ -25,24 +26,25 @@ function add(name, phone, email) {
   contacts.push(contact);
   fs.writeFileSync(CONTACTS_FILE, JSON.stringify(contacts, null, 2), "utf8");
 
-  result.error = null;
+  //result.error = null;
   return result;
 }
 
-function remove(email) {
+export function remove(email) {
   const result = {};
   const contacts = loadContacts();
 
-  result.size = contacts.length;
+  result.loadedCount = contacts.length;
 
   const toRemove = contacts.findIndex(
     (c) => c.email.toLowerCase() === email.toLowerCase(),
   );
 
   if (toRemove === -1) {
-    result.deletedName = undefined;
+    result.contactNotFound = true;
     return result;
   } else {
+    result.contactNotFound = false;
     result.deletedName = contacts[toRemove].name;
     contacts.splice(toRemove, 1);
     fs.writeFileSync(CONTACTS_FILE, JSON.stringify(contacts, null, 2), "utf8");
@@ -51,25 +53,25 @@ function remove(email) {
   }
 }
 
-function list() {
+export function list() {
   const result = {};
   const contacts = loadContacts();
 
-  result.size = contacts.length;
+  result.loadedCount = contacts.length;
   //   result.results = JSON.stringify(contacts);
-  result.results = contacts;
+  result.contacts = contacts;
 
   return result;
 }
 
-function search(name) {
+export function search(name) {
   const result = {};
   const contacts = loadContacts();
 
-  result.size = contacts.length;
+  result.loadedCount = contacts.length;
 
   const toSearch = name.toLowerCase();
-  result.results = contacts.filter((c) =>
+  result.contacts = contacts.filter((c) =>
     c.name.toLowerCase().includes(toSearch),
   );
 
