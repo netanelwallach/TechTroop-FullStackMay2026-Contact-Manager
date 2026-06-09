@@ -57,5 +57,19 @@ function list() {
   const contacts = loadContacts();
 
   result.size = contacts.length;
-  result.contacts = JSON.stringify(contacts);
+  result.results = JSON.stringify(contacts);
+}
+
+function search(name) {
+  const result = {};
+  const contacts = loadContacts();
+
+  result.size = contacts.length;
+
+  const toSearch = name.toLowerCase();
+  result.results = contacts.filter((c) =>
+    c.name.toLowerCase().includes(toSearch),
+  );
+
+  return result;
 }
