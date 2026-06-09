@@ -1,5 +1,4 @@
 import fs from "fs";
-import { resourceUsage } from "process";
 
 const CONTACTS_FILE = "contacts.json";
 
@@ -30,7 +29,7 @@ function add(name, phone, email) {
   return result;
 }
 
-function reomve(email) {
+function remove(email) {
   const result = {};
   const contacts = loadContacts();
 
@@ -57,7 +56,10 @@ function list() {
   const contacts = loadContacts();
 
   result.size = contacts.length;
-  result.results = JSON.stringify(contacts);
+  //   result.results = JSON.stringify(contacts);
+  result.results = contacts;
+
+  return result;
 }
 
 function search(name) {
