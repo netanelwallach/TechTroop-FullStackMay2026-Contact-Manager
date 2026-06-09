@@ -1,4 +1,4 @@
-// module.exports = { handleCommand };
+module.exports = { handleCommand };
 
 const { validateEmail } = require("../utils/validation");
 const contactService = require("../services/contactService");
@@ -82,7 +82,7 @@ function handleCommand(args) {
         );
       }
       console.log("Loading contacts from contacts.json...");
-      result = remove(args[1]);
+      result = contactService.remove(args[1]);
       if (result.loadedCount === 0) {
         console.log("=== No Contacts ===");
         break;
