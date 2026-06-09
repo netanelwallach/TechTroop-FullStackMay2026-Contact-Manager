@@ -51,3 +51,11 @@ function reomve(email) {
     return result;
   }
 }
+
+function list() {
+  const result = {};
+  const contacts = loadContacts();
+
+  result.size = contacts.length;
+  result.contacts = JSON.stringify(contacts);
+}
