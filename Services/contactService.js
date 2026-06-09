@@ -1,27 +1,23 @@
-import fs from "fs";
+const fs = require("fs");
 
 const CONTACTS_FILE = "contacts.json";
 
-export class ContactService {
-  constructor(filePath = "contacts.json") {
-    this.filePath = filePath;
-  }
+class ContactService {
   #loadContacts() {
     if (fs.existsSync(CONTACTS_FILE)) {
       const data = fs.readFileSync(CONTACTS_FILE, "utf8");
       return data.trim() ? JSON.parse(data) : [];
     }
-    return []; // Return empty array if file doesn't exist yet
+    return [];
   }
 
-  add(name, phone, email) {
+  add(name, email, phone) {
     let result = {};
-    const contacts = loadContacts();
+    const contacts = this.#loadContacts();
 
     result.loadedCount = contacts.length;
 
     if (contacts.some((c) => c.email.toLowerCase() === email.toLowerCase())) {
-      //result.error = "Email already exists in contacts";
       result.isDuplicate = true;
       return result;
     }
@@ -30,13 +26,12 @@ export class ContactService {
     contacts.push(contact);
     fs.writeFileSync(CONTACTS_FILE, JSON.stringify(contacts, null, 2), "utf8");
 
-    //result.error = null;
     return result;
   }
 
   remove(email) {
     const result = {};
-    const contacts = loadContacts();
+    const contacts = this.#loadContacts();
 
     result.loadedCount = contacts.length;
 
@@ -63,10 +58,9 @@ export class ContactService {
 
   list() {
     const result = {};
-    const contacts = loadContacts();
+    const contacts = this.#loadContacts();
 
     result.loadedCount = contacts.length;
-    //   result.results = JSON.stringify(contacts);
     result.contacts = contacts;
 
     return result;
@@ -74,7 +68,7 @@ export class ContactService {
 
   search(name) {
     const result = {};
-    const contacts = loadContacts();
+    const contacts = this.#loadContacts();
 
     result.loadedCount = contacts.length;
 
@@ -86,3 +80,5 @@ export class ContactService {
     return result;
   }
 }
+
+module.exports = new ContactService();
